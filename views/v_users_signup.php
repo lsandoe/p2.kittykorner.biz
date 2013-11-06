@@ -9,7 +9,8 @@
         Email <input type='text' name='email'><br>
         Password <input type='password' name='password'><br>
         Location <input type='text' name='location'><br>
-        Short Bio <textarea name='bio' rows='5' cols='82'></textarea>
+        Short Biography <br />
+        <textarea name='bio' rows='5' cols='82'></textarea>
         
         <input type='submit' value='Sign Up'>
         

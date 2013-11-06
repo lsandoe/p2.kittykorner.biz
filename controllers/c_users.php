@@ -14,7 +14,7 @@ class users_controller extends base_controller {
         /*-------------------------------------------------------------------------------------------------
         Display a form so users can sign up        
         -------------------------------------------------------------------------------------------------*/
-    public function signup() {
+    public function signup($status = "") {
        
        # Set up the view
        $this->template->content = View::instance('v_users_signup');
@@ -29,8 +29,15 @@ class users_controller extends base_controller {
     Process the sign up form
     -------------------------------------------------------------------------------------------------*/
     public function p_signup() {
-
-
+			# check to see if the email being entered has already been added to the users table 
+			# if the email address has already been submitted then return to the form and let the user know to pick another valid email
+			if ('lin@aol.com' === 'lin@aol.com') {
+				echo "fine return to the signup page with a pick another email address message";
+				$redoEmailMessage = "There was a problem with the email address. Please enter in another valid email address.";	
+			}
+			
+			#call the method signup() and pass in the message to display at the top
+			signup($redoEmailMessage);
 			
 			# Mark the time
             $_POST['created']  = Time::now();
@@ -41,8 +48,6 @@ class users_controller extends base_controller {
             # Create a hashed token
             $_POST['token']    = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
             
-
-			
             # Insert the new user    
             DB::instance(DB_NAME)->insert_row('users', $_POST);
             
@@ -59,7 +64,12 @@ class users_controller extends base_controller {
     
             $this->template->content = View::instance('v_users_login');            
             echo $this->template;   
+			
+			# Mark the time
+            $_POST['last_login']  = Time::now();
        
+	   		# Insert the last login time into the users table    
+            DB::instance(DB_NAME)->insert_row('users', $_POST);
     }
     
     
@@ -128,16 +138,30 @@ class users_controller extends base_controller {
         -------------------------------------------------------------------------------------------------*/
    public function profile() {
                 
-
-                echo "Here Goes!";
                 # Set up the View
                 $this->template->content = View::instance('v_crazy');
 
-# Pass the data to the View
+				# Pass the data to the View
                 $this->template->content->user_name = $user_name;
 				
                 # Display the view
                 echo $this->template;
+                                
+    }
+	
+	   public function p_update_user_profile() {
+		   
+		   		# Mark the time user profile was last modified
+            	$_POST['modified']  = Time::now();
+            
+            	# Hash password
+            	$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+				
+				# Insert updated information    
+            	DB::instance(DB_NAME)->insert_row('users', $_POST);
+            
+            	# Send them to the login page
+            	Router::redirect('/');
                                 
     }
 
