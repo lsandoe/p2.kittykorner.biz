@@ -26,6 +26,7 @@
                                 <li><a href='/posts/add'><button type="button">Add Post</button></a></li>
                                 <li><a href='/posts/'><button type="button">View Posts</button></a></li>
                                 <li><a href='/posts/users'><button type="button">Follow Users</button></a></li>
+                                <li><a href='/users/profile'><button type="button">View/Edit Profile</button></a></li>
                                 <li><a href='/users/logout'><button type="button">Logout</button></a></li>
                         <?php else: ?>
                                 <li><a href='/users/signup'><button type="button">Sign Up</button></a></li>

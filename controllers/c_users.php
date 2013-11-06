@@ -126,20 +126,16 @@ class users_controller extends base_controller {
         /*-------------------------------------------------------------------------------------------------
         
         -------------------------------------------------------------------------------------------------*/
-    public function profile($user_name = NULL) {
+   public function profile() {
                 
-                # Only logged in users are allowed...
-                if(!$this->user) {
-                        die('Members only. Click on the link to login or sign up for a free account to Chit Chat.<a href="/users/login">Login</a>');
-                }
-                
+
+                echo "Here Goes!";
                 # Set up the View
-                $this->template->content = View::instance('v_users_profile');
-                $this->template->title   = "Profile";
-                                
-                # Pass the data to the View
+                $this->template->content = View::instance('v_crazy');
+
+# Pass the data to the View
                 $this->template->content->user_name = $user_name;
-                
+				
                 # Display the view
                 echo $this->template;
                                 
