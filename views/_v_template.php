@@ -10,24 +10,26 @@
                                                                                 
         <!-- Controller Specific JS/CSS -->
         <link rel="stylesheet" href="/css/sample-app.css" type="text/css">
+        <link rel="icon" type="image/png" href="cc.png">
         <?php if(isset($client_files_head)) echo $client_files_head; ?>
                 
 </head>
 
 <body>        
-
+		<!--this header is linked to go back to home page-->
+        <h1><a href="/"><img src="/logo.png" alt="Chit Chat logo">Chit Chat</a></h1>
         <nav>
                 <menu>
-                                <li><a href='/'>Home</a></li>
+                                <li><a href='/'><button type="button">Home</button></a></li>
                                 
                         <?php if($user): ?>
-                                <li><a href='/posts/add'>Add Post</a></li>
-                                <li><a href='/posts/'>View Posts</a></li>
-                                <li><a href='/posts/users'>Follow Users</a></li>
-                                <li><a href='/users/logout'>Logout</a></li>
+                                <li><a href='/posts/add'><button type="button">Add Post</button></a></li>
+                                <li><a href='/posts/'><button type="button">View Posts</button></a></li>
+                                <li><a href='/posts/users'><button type="button">Follow Users</button></a></li>
+                                <li><a href='/users/logout'><button type="button">Logout</button></a></li>
                         <?php else: ?>
-                                <li><a href='/users/signup'>Sign Up</a></li>
-                                <li><a href='/users/login'>Log In</a></li>
+                                <li><a href='/users/signup'><button type="button">Sign Up</button></a></li>
+                                <li><a href='/users/login'><button type="button">Log In</button></a></li>
                         <?php endif; ?>
                 </menu>
         </nav>

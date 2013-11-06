@@ -1,12 +1,9 @@
+<!--first check if the user is signed in-->
 <?php if($user): ?>
- 
- 		<pre>
-        	<?php
-        		print_r($user);
-			?>	
-        </pre>
-        Hello <?=$user->first_name;?>
+        <!-- Greet the signed up user-->
+        Hello <?=$user->first_name . " " . $user->last_name ?>
 <?php else: ?>
-        Welcome Chit Chatter!<br>
-		This is a chatting blog to not only chat with others, but follow what they are up to as well.  So lets get started and become part of the chatting network!      
+		<!-- Explain to the new arrival what this is all about-->
+        <h3>Welcome Chit Chatter!</h3>
+		<p>This is a chatting blog to not only chat with others, but follow what they are up to throughout the day.  So lets get started by signing up or signing in to become part of the chatting network!</p>      
 <?php endif; ?>
