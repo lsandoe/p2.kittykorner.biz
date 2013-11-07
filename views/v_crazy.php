@@ -9,13 +9,13 @@
 
 <form method='POST' action='/users/p_update_user_profile'>
 
-        First Name <input type='text' name='first_name' value=<?=$user->first_name?> /><br /><br />
-        Last Name <input type='text' name='last_name' value=<?=$user->last_name?> /><br /><br />
-        Email <input type='text' name='email' value=<?=$user->email?> /><br /><br />
+        First Name: <?=$user->first_name?> <input type='text' name='first_name' /><br /><br />
+        Last Name: <?=$user->last_name?> <input type='text' name='last_name' /><br /><br />
+       <!-- Email: <?=$user->email?> <input type='text' name='email' /><br /><br />-->
         <!-- call to run reset password -->
-        Password <input type='text' name='password' value='Type in a new password'/><br /><br />
-        Location <input type='text' name='location' value=<?=$user->location?> /><br /><br />
-        A Short Biography is presented below <br> <textarea name='bio' rows='5' cols='82'><?=$user->bio?></textarea><br />
+        Password: <input type='text' name='password' value='Type in a new password'/><br /><br />
+        Location: <?=$user->location?> <input type='text' name='location' /><br /><br />
+        A Short Biography is presented below <br> <?=$user->bio?> <br> <textarea name='bio' rows='5' cols='82'></textarea><br />
         <br />
         <input type='submit' value='Update My Profile'>
         <!-- give the user a way to just say everything is okay-->

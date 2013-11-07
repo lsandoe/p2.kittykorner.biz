@@ -14,7 +14,7 @@ class users_controller extends base_controller {
         /*-------------------------------------------------------------------------------------------------
         Display a form so users can sign up        
         -------------------------------------------------------------------------------------------------*/
-    public function signup($status = "") {
+    public function signup() {
        
        # Set up the view
        $this->template->content = View::instance('v_users_signup');
@@ -29,47 +29,64 @@ class users_controller extends base_controller {
     Process the sign up form
     -------------------------------------------------------------------------------------------------*/
     public function p_signup() {
+		
+	
+			# set up an sql statement that needs to be sanitized to check for duplicate email mddresses
+			# sanitize the user input
+			
+			$_POST = DB::instance(DB_NAME)->sanitize($_POST);
+			$q = "SELECT email FROM users WHERE email = '" . $_POST['email'] . "'"; 
+			
+			
+			# execute the query			
+			$possibleDuplicateEmail = DB::instance(DB_NAME)->select_field($q);
+			
+			
+			
+			#echo " The post email is " . $_POST[email] . " the possible db email is " . $possibleDuplicateEmail;
+			
 			# check to see if the email being entered has already been added to the users table 
 			# if the email address has already been submitted then return to the form and let the user know to pick another valid email
-			if ('lin@aol.com' === 'lin@aol.com') {
-				echo "fine return to the signup page with a pick another email address message";
-				$redoEmailMessage = "There was a problem with the email address. Please enter in another valid email address.";	
+			if ($possibleDuplicateEmail == $_POST['email']) {
+				#echo "fine return to the signup page with a pick another email address message";
+				
+				#call a Duplicate Email Redo sign up view so the user can re-enter information and another valid email address
+				# Set up the view
+       			$this->template->content = View::instance('v_users_signup_enter_a_new_email');
+       
+       			# Render the view
+       			echo $this->template;
+			} else {
+				
+	
+				# Mark the time
+				$_POST['created']  = Time::now();
+				
+				# Mark the time
+				$_POST['modified']  = Time::now();
+				
+				# Hash password
+				$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+				
+				# Create a hashed token
+				$_POST['token']    = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
+				
+				# Insert the new user    
+				DB::instance(DB_NAME)->insert_row('users', $_POST);
+				
+				Router::redirect('/users/login/');
 			}
-			
-			#call the method signup() and pass in the message to display at the top
-			signup($redoEmailMessage);
-			
-			# Mark the time
-            $_POST['created']  = Time::now();
-            
-            # Hash password
-            $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
-            
-            # Create a hashed token
-            $_POST['token']    = sha1(TOKEN_SALT.$_POST['email'].Utils::generate_random_string());
-            
-            # Insert the new user    
-            DB::instance(DB_NAME)->insert_row('users', $_POST);
-            
-            # Send them to the login page
-            Router::redirect('/users/login');
-            
     }
 
 
         /*-------------------------------------------------------------------------------------------------
         Display a form so users can login
         -------------------------------------------------------------------------------------------------*/
-    public function login() {
+    public function login($user_id = NULL) {
     
             $this->template->content = View::instance('v_users_login');            
-            echo $this->template;   
-			
-			# Mark the time
-            $_POST['last_login']  = Time::now();
-       
-	   		# Insert the last login time into the users table    
-            DB::instance(DB_NAME)->insert_row('users', $_POST);
+            echo $this->template;
+	
     }
     
     
@@ -88,10 +105,11 @@ class users_controller extends base_controller {
                         WHERE email = "'.$_POST['email'].'"
                         AND password = "'.$_POST['password'].'"';
                 
-                //echo $q;        
-                
+
                 # If there was, this will return the token           
                 $token = DB::instance(DB_NAME)->select_field($q);
+				
+				
                 
                 # Success
                 if($token) {
@@ -99,6 +117,21 @@ class users_controller extends base_controller {
                         # Don't echo anything to the page before setting this cookie!
                         setcookie('token',$token, strtotime('+1 year'), '/');
                         
+						 $logintime = Time::now();
+						
+						# set the alst login time
+						
+						$sql = "UPDATE users SET last_login=" .  $logintime . " WHERE token='" . $token . "'";
+					
+						
+	
+						
+						DB::instance(DB_NAME)->query($sql);
+						
+						
+						#"UPDATE `users` SET `last_login` = 5 WHERE `token` = febec29103960d6debfeac17a926db8f55141fc7";
+						
+						
                         # Send them to the homepage
                         Router::redirect('/');
                 }
@@ -154,6 +187,11 @@ class users_controller extends base_controller {
 		   		# Mark the time user profile was last modified
             	$_POST['modified']  = Time::now();
             
+				#check if password is blank or set to the default of 'Type in a new password.' If so then use the unset method for the $_POST
+				if (($_POST[password] == "") or ($_POST[password] == 'Type in a new password')) {
+					unset($_POST[password]);	
+				}
+			
             	# Hash password
             	$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
 				
