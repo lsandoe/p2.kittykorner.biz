@@ -1,50 +1,37 @@
 <?php
 class users_controller extends base_controller {
-
-        /*-------------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
         
-        -------------------------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------*/
     public function __construct() {
     
             # Make sure the base controller construct gets called
-                parent::__construct();
+            parent::__construct();
     } 
-
-
-        /*-------------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
         Display a form so users can sign up        
-        -------------------------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------*/
     public function signup() {
-       
        # Set up the view
        $this->template->content = View::instance('v_users_signup');
        
        # Render the view
        echo $this->template;
-       
     }
-    
-    
-    /*-------------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
     Process the sign up form
-    -------------------------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------*/
     public function p_signup() {
-		
-	
 			# set up an sql statement that needs to be sanitized to check for duplicate email mddresses
 			# sanitize the user input
 			
 			$_POST = DB::instance(DB_NAME)->sanitize($_POST);
 			$q = "SELECT email FROM users WHERE email = '" . $_POST['email'] . "'"; 
 			
-			
 			# execute the query			
 			$possibleDuplicateEmail = DB::instance(DB_NAME)->select_field($q);
 			
-			
-			
 			#echo " The post email is " . $_POST[email] . " the possible db email is " . $possibleDuplicateEmail;
-			
 			# check to see if the email being entered has already been added to the users table 
 			# if the email address has already been submitted then return to the form and let the user know to pick another valid email
 			if ($possibleDuplicateEmail == $_POST['email']) {
@@ -58,7 +45,6 @@ class users_controller extends base_controller {
        			echo $this->template;
 			} else {
 				
-	
 				# Mark the time
 				$_POST['created']  = Time::now();
 				
@@ -77,24 +63,17 @@ class users_controller extends base_controller {
 				Router::redirect('/users/login/');
 			}
     }
-
-
-        /*-------------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
         Display a form so users can login
-        -------------------------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------*/
     public function login($user_id = NULL) {
-    
             $this->template->content = View::instance('v_users_login');            
             echo $this->template;
-	
     }
-    
-    
-    /*-------------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
     Process the login form
-    -------------------------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------*/
     public function p_login() {
-                      
                    # Hash the password they entered so we can compare it with the ones in the database
                 $_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
                 
@@ -105,12 +84,9 @@ class users_controller extends base_controller {
                         WHERE email = "'.$_POST['email'].'"
                         AND password = "'.$_POST['password'].'"';
                 
-
                 # If there was, this will return the token           
                 $token = DB::instance(DB_NAME)->select_field($q);
 				
-				
-                
                 # Success
                 if($token) {
                 
@@ -134,14 +110,11 @@ class users_controller extends base_controller {
                 else {
                         echo "Login failed! <a href='/users/login'>Try again?</a>";
                 }
-           
     }
-
-
-        /*-------------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
         No view needed here, they just goto /users/logout, it logs them out and sends them
         back to the homepage.        
-        -------------------------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------*/
     public function logout() {
        
        # Generate a new token they'll use next time they login
@@ -158,12 +131,10 @@ class users_controller extends base_controller {
        
        # Send them back to the homepage
        Router::redirect('/');
-       
     }
-
-        /*-------------------------------------------------------------------------------------------------
+/*-------------------------------------------------------------------------------------------------
         
-        -------------------------------------------------------------------------------------------------*/
+-------------------------------------------------------------------------------------------------*/
    public function profile() {
                 # Set up the View
                 $this->template->content = View::instance('v_crazy');
@@ -174,8 +145,10 @@ class users_controller extends base_controller {
                 # Display the view
                 echo $this->template;
     }
-	
-	   public function p_update_user_profile() {
+/*-------------------------------------------------------------------------------------------------
+        
+-------------------------------------------------------------------------------------------------*/
+	public function p_update_user_profile() {
 		   
 		   		# Since the form has accepted user input, this needs to be sanitized
 				$_POST = DB::instance(DB_NAME)->sanitize($_POST);
@@ -221,5 +194,8 @@ class users_controller extends base_controller {
             	# Send them to the login page
             	Router::redirect('/');
     }
+/*-------------------------------------------------------------------------------------------------
+	This is the end of all the functions in the users controller
+-------------------------------------------------------------------------------------------------*/
 } # end of the class
 
