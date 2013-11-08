@@ -122,14 +122,9 @@ class users_controller extends base_controller {
 						# set the alst login time
 						
 						$sql = "UPDATE users SET last_login=" .  $logintime . " WHERE token='" . $token . "'";
-					
-						
 	
 						
 						DB::instance(DB_NAME)->query($sql);
-						
-						
-						#"UPDATE `users` SET `last_login` = 5 WHERE `token` = febec29103960d6debfeac17a926db8f55141fc7";
 						
 						
                         # Send them to the homepage
@@ -170,7 +165,6 @@ class users_controller extends base_controller {
         
         -------------------------------------------------------------------------------------------------*/
    public function profile() {
-                
                 # Set up the View
                 $this->template->content = View::instance('v_crazy');
 
@@ -179,29 +173,53 @@ class users_controller extends base_controller {
 				
                 # Display the view
                 echo $this->template;
-                                
     }
 	
 	   public function p_update_user_profile() {
 		   
-		   		# Mark the time user profile was last modified
+		   		# Since the form has accepted user input, this needs to be sanitized
+				$_POST = DB::instance(DB_NAME)->sanitize($_POST);
+		   
+		   		# Update the time user profile was last modified
             	$_POST['modified']  = Time::now();
-            
-				#check if password is blank or set to the default of 'Type in a new password.' If so then use the unset method for the $_POST
-				if (($_POST[password] == "") or ($_POST[password] == 'Type in a new password')) {
-					unset($_POST[password]);	
-				}
 			
-            	# Hash password
-            	$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+				# check if password is blank or set to the default of 'Type in a new password.' 
+				#If so then use the unset method for the $_POST
+				if (($_POST[password] == "") or ($_POST[password] == 'Type in a new password')) {
+					
+					# get rid of the password field in the $_POST object because the user did not
+					# enter a password or left it blank
+					unset($_POST[password]);
+					
+					# Build a SQL query without the password at all since the user
+					# entered nothing or cleared the field alltogether
+					$sql = "UPDATE users SET 
+					modified=" . $_POST[modified] . ", 
+					first_name='" . $_POST[first_name] . "', 
+					last_name='" . $_POST[last_name] . "', 
+					location='" . $_POST[location] . "', 
+					bio='" . $_POST[bio] . "' 
+					WHERE user_id =" . $_POST[userid] . "";
+				} else {
+					# Hash password
+					$_POST['password'] = sha1(PASSWORD_SALT.$_POST['password']);
+					
+					# Build a SQL string that will also update the password
+					$sql = "UPDATE users SET 
+					modified=" . $_POST[modified] . ", 
+					password='" . $_POST[password] . "', 
+					first_name='" . $_POST[first_name] . "', 
+					last_name='" . $_POST[last_name] . "', 
+					location='" . $_POST[location] . "', 
+					bio='" . $_POST[bio] . "' 
+					WHERE user_id =" . $_POST[userid] . "";
+				}
 				
-				# Insert updated information    
-            	DB::instance(DB_NAME)->insert_row('users', $_POST);
-            
+				# Executing an Update Query to revise the user profile
+				DB::instance(DB_NAME)->query($sql);
+	  
             	# Send them to the login page
             	Router::redirect('/');
-                                
     }
-
 } # end of the class
 
