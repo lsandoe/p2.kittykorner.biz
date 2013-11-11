@@ -5,7 +5,47 @@ menu {
 }
 
 li {
-	
-	
 		display:inline;
+}
+
+li.plus {
+		display:block;
+}
+
+body {
+	font-family:"Arial Black", Gadget, sans-serif;
+	font-size:16px;
+	padding: 20px;
+	background-color:#FCF
+}
+
+html {
+	
+	background-color:#603;
+	padding:50px;
+	margin:20px;
+}
+
+body nav menu {
+	background-color:#96C;
+}
+
+body nav menu li a button {
+	font-family:"Arial Black", Gadget, sans-serif;
+	font-size:16px;
+}
+
+body form input {
+	font-family:"Arial Black", Gadget, sans-serif;
+	font-size:16px;
+}
+
+body form textarea {
+	font-family:"Arial Black", Gadget, sans-serif;
+	font-size:16px;	
+}
+
+body form a button {
+	font-family:"Arial Black", Gadget, sans-serif;
+	font-size:16px;
 }

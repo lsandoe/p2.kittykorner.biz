@@ -7,3 +7,9 @@
         <h3>Welcome Chit Chatter!</h3>
 		<p>This is a chatting blog to not only chat with others, but follow what they are up to throughout the day.  So lets get started by signing up or signing in to become part of the chatting network!</p>      
 <?php endif; ?>
+
+<h2> +1 Features </h2>
+<ol>
+<li class = "plus" >Edit the User Profile (Bio, Location, First Name, Last Name)</li>
+<li class = "plus" >Reset the User Password Feature</li>
+</ol>
