@@ -1,29 +1,23 @@
-
-menu {
-		margin:0;
-		padding:0;
-}
-
-li {
-		display:inline;
-}
-
-li.plus {
-		display:block;
-}
-
-body {
-	font-family:"Arial Black", Gadget, sans-serif;
-	font-size:16px;
-	padding: 20px;
-	background-color:#FCF
-}
+/*--------------------------------------------------------------
+HTML Styling
+--------------------------------------------------------------*/
 
 html {
 	
 	background-color:#603;
 	padding:50px;
 	margin:20px;
+}
+
+/*--------------------------------------------------------------
+Body Styling
+--------------------------------------------------------------*/
+
+body {
+	font-family:"Arial Black", Gadget, sans-serif;
+	font-size:16px;
+	padding: 20px;
+	background-color:#FCF
 }
 
 body nav menu {
@@ -49,3 +43,20 @@ body form a button {
 	font-family:"Arial Black", Gadget, sans-serif;
 	font-size:16px;
 }
+
+/*--------------------------------------------------------------
+Details Styling
+--------------------------------------------------------------*/
+menu {
+		margin:0;
+		padding:0;
+}
+
+li {
+		display:inline;
+}
+
+li.plus {
+		display:block;
+}
+

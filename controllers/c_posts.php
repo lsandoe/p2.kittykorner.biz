@@ -3,7 +3,7 @@
 class posts_controller extends base_controller {
         
         /*-------------------------------------------------------------------------------------------------
-        
+        Basic Construct sets up for object initialization
         -------------------------------------------------------------------------------------------------*/
         public function __construct() {
                 
@@ -17,7 +17,6 @@ class posts_controller extends base_controller {
                 
         } 
         
-         
         /*-------------------------------------------------------------------------------------------------
         Display a new post form
         -------------------------------------------------------------------------------------------------*/
@@ -29,32 +28,30 @@ class posts_controller extends base_controller {
                 
         }        
         
-        
         /*-------------------------------------------------------------------------------------------------
         Process new posts
         -------------------------------------------------------------------------------------------------*/
         public function p_add() {
 				
-                
+                # since this is user input it needs to be scrubbed
 				$_POST = DB::instance(DB_NAME)->sanitize($_POST);
 				
+				# check to see if the user just put in some blank space
 				if (empty($_POST['content']) || strlen(trim($_POST['content']))==0) {
-	
+						
+						# if the user put in blank space just reroute back over to the post page
 						Router::redirect('/posts/add/');
 						
-						
 				} else {
-					
-				
+						# the following fields are added to the $_POST object				
 						$_POST['user_id']  = $this->user->user_id;
 						$_POST['created']  = Time::now();
 						$_POST['modified'] = Time::now();
 						
-	
-						
-						
+						# call the database and insert the post
 						DB::instance(DB_NAME)->insert('posts',$_POST);
 						
+						# after the message is added, go to the posts page
 						Router::redirect('/posts/');
 				}
         }
@@ -91,12 +88,11 @@ class posts_controller extends base_controller {
                 
                 # Render view
                 echo $this->template;
-                
         }
         
         
         /*-------------------------------------------------------------------------------------------------
-        
+        Show who is following whom
         -------------------------------------------------------------------------------------------------*/
         public function users() {
                 
@@ -124,9 +120,7 @@ class posts_controller extends base_controller {
                 
                 # Render view
                 echo $this->template;
-                
         }
-        
         
         /*-------------------------------------------------------------------------------------------------
         Creates a row in the users_users table representing that one user is following another
@@ -145,7 +139,6 @@ class posts_controller extends base_controller {
         
             # Send them back
             Router::redirect("/posts/users");
-        
         }
         
         
@@ -162,9 +155,5 @@ class posts_controller extends base_controller {
         
             # Send them back
             Router::redirect("/posts/users");
-        
         }
-        
-        
-        
 } # eoc
